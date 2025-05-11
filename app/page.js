@@ -10,10 +10,7 @@ export default function Home() {
   const [copied, setCopied] = useState(false)
 
 
-  const gifUrls = ["https://i.gifer.com/6KpW.gif", "https://i.gifer.com/19wE.gif", "https://i.gifer.com/3R2B.gif",
-    "https://i.gifer.com/yH.gif", "https://i.gifer.com/2unv.gif", "https://i.gifer.com/IXNp.gif", "https://i.gifer.com/6ka.gif",
-    "https://i.gifer.com/Z6W9.gif", "https://i.gifer.com/3hdw.gif"
-  ]
+  const gifUrls = ['/gifs/yH.gif', '/gifs/2unv.gif', '/gifs/3MFm.gif','/gifs/3R2B.gif','/gifs/6KpW.gif','/gifs/IXNp.gif','/gifs/Z6W9.gif']
 
   const [currentGif, setCurrentGif] = useState(gifUrls[0])
 
