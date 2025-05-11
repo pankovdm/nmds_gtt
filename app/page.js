@@ -1,103 +1,136 @@
-import Image from "next/image";
+'use client'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [accountName, setAccountName] = useState('')
+  const [bayerName, setBayerName] = useState('')
+  const [snippet, setSnippet] = useState('')
+  const [accountNumber, setAccountNumber] = useState(1)
+  const [resultLink, setResultLink] = useState('')
+  const [copied, setCopied] = useState(false)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+
+  const gifUrls = ["https://i.gifer.com/6KpW.gif", "https://i.gifer.com/19wE.gif", "https://i.gifer.com/3R2B.gif",
+    "https://i.gifer.com/yH.gif", "https://i.gifer.com/2unv.gif", "https://i.gifer.com/IXNp.gif", "https://i.gifer.com/6ka.gif",
+    "https://i.gifer.com/Z6W9.gif", "https://i.gifer.com/3hdw.gif"
+  ]
+
+  const [currentGif, setCurrentGif] = useState(gifUrls[0])
+
+  // Меняем гифку каждые 5 секунд
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * gifUrls.length)
+      setCurrentGif(gifUrls[randomIndex])
+    }, 10000)
+
+    return () => clearInterval(interval) // Чистим интервал при размонтировании
+  }, [])
+
+  const extractValues = (text) => {
+    const match = text.match(/send_to':\s*'AW-([\d]+)\/([^\']+)'/)
+    if (match) {
+      return { value1: match[1], value2: match[2] }
+    }
+    return { value1: '', value2: '' }
+  }
+
+  useEffect(() => {
+    if (!accountName || !snippet) {
+      setResultLink('')
+      return
+    }
+
+    const { value1, value2 } = extractValues(snippet)
+    const fullNetwork = `${accountName}${accountNumber}-${bayerName}`
+    const finalLink = `lpurl?targetid=1ttfmin5b4w1l7pzrtwa&network=${fullNetwork}&placement=placement&creative=creative&campaignid=campaignid&gclid=gclid&keyword=keyword&param2=${value1}&param1=${value2}`
+    setResultLink(finalLink)
+    setCopied(false)
+  }, [accountName, snippet, accountNumber])
+
+  const copyToClipboard = () => {
+    if (!resultLink) return
+    navigator.clipboard.writeText(resultLink)
+    setCopied(true)
+  }
+
+  const incrementAccount = () => {
+    setAccountNumber(prev => prev + 1)
+  }
+
+  const resetAll = () => {
+    setAccountName('')
+    setSnippet('')
+    setAccountNumber(1)
+    setResultLink('')
+    setCopied(false)
+  }
+
+  return (
+    <main className="min-h-screen bg-gray-900 text-gray-100 p-6 font-sans relative">
+      {/* Основная форма */}
+      <div className="flex flex-col items-center w-full max-w-xl mx-auto">
+        <h1 className="text-3xl font-bold tracking-wide mb-1 text-white">NomADS</h1>
+        <p className="text-gray-400 text-sm mb-6">Generating a tracking template</p>
+  
+        <input
+          type="text"
+          value={accountName}
+          onChange={(e) => setAccountName(e.target.value)}
+          placeholder="Account name"
+          className="mb-4 p-2 bg-gray-800 text-white border border-gray-700 rounded w-full max-w-md focus:outline-none focus:ring focus:ring-blue-500"
+        />
+  
+        <input
+          type="text"
+          value={bayerName}
+          onChange={(e) => setBayerName(e.target.value)}
+          placeholder="Bayer Name"
+          className="mb-4 p-2 bg-gray-800 text-white border border-gray-700 rounded w-full max-w-md focus:outline-none focus:ring focus:ring-blue-500"
+        />
+  
+        <textarea
+          value={snippet}
+          onChange={(e) => setSnippet(e.target.value)}
+          placeholder="Snippet"
+          rows={8}
+          className="mb-4 p-2 h-60 bg-gray-800 text-white border border-gray-700 rounded w-full max-w-md focus:outline-none focus:ring focus:ring-blue-500"
+        />
+  
+        <div className="flex flex-col items-center mb-4">
+          <span className="text-xs text-gray-400 mb-1">Номер кабинета</span>
+          <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-mono">
+            {accountNumber}
+          </span>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+  
+        <div className="flex gap-4 mb-6">
+          <button onClick={incrementAccount} className="bg-blue-700 hover:bg-blue-600 transition px-4 py-2 rounded text-sm">
+            + Каб
+          </button>
+          <button onClick={resetAll} className="bg-red-600 hover:bg-red-500 transition px-4 py-2 rounded text-sm">
+            Новый акк
+          </button>
+        </div>
+  
+        {resultLink && (
+          <div
+            onClick={copyToClipboard}
+            className="bg-gray-800 border border-gray-700 p-4 rounded w-full max-w-2xl break-words text-sm cursor-pointer hover:border-blue-500 transition"
+          >
+            {resultLink}
+          </div>
+        )}
+  
+        {copied && <div className="mt-2 text-green-400 text-sm">Хуячим!</div>}
+      </div>
+  
+      {/* Абсолютно спозиционированная гифка справа */}
+      <img
+        src={currentGif}
+        alt="Working animation"
+        className="absolute top-1/4 right-8 w-80 h-auto pointer-events-none transition-opacity duration-500"
+      />
+    </main>
+  )
 }
