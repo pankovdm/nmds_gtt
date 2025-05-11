@@ -40,7 +40,7 @@ export default function Home() {
 
     const { value1, value2 } = extractValues(snippet)
     const fullNetwork = `${accountName}${accountNumber}-${bayerName}`
-    const finalLink = `lpurl?targetid=1ttfmin5b4w1l7pzrtwa&network=${fullNetwork}&placement=placement&creative=creative&campaignid=campaignid&gclid=gclid&keyword=keyword&param2=${value1}&param1=${value2}`
+    const finalLink = `{lpurl}?targetid=1ttfmin5b4w1l7pzrtwa&network=${fullNetwork}&placement=placement&creative=creative&campaignid=campaignid&gclid=gclid&keyword=keyword&param2=${value1}&param1=${value2}`
     
     setResultLink(finalLink)
     setCopied(false)
