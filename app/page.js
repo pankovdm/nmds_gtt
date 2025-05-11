@@ -52,10 +52,10 @@ export default function Home() {
   const copyToClipboard = () => {
     if (!resultLink) return;
   
-    navigator.clipboard.writeText(resultLink);
-    setCopied(true);
+    navigator.clipboard.writeText(resultLink); // копируем
+    setCopied(true); // включаем "спизжено!"
   
-    // Добавляем таймер на 3 секунды
+    // отключаем через 3 секунды
     setTimeout(() => {
       setCopied(false);
     }, 3000);
@@ -70,7 +70,6 @@ export default function Home() {
     setSnippet('')
     setAccountNumber(1)
     setResultLink('')
-    setCopied(false)
   }
 
   return (
