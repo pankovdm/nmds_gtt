@@ -122,7 +122,7 @@ export default function Home() {
           </div>
         )}
   
-        {copied && <div className="mt-2 text-green-400 text-sm">Хуячим!</div>}
+        {copied && <div className="mt-2 text-green-400 text-sm">спизжено!</div>}
       </div>
   
       {/* Абсолютно спозиционированная гифка справа */}
